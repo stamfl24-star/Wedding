@@ -80,34 +80,34 @@
         return;
       }
 
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({ name: name, answer: answer }),
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(response => response.json())
-      .then(data => {
-  	if (answer.includes('Ναι')) {
-   	 messageEl.innerHTML = `
-       <strong>Σας ευχαριστούμε πολύ!</strong><br>
-      Η παρουσία σας θα μας δώσει μεγάλη χαρά.<br>
-      Ανυπομονούμε να σας δούμε! 💖
-    `;
- 	 } else {
-   	 messageEl.innerHTML = `
-      	 <strong>Σας ευχαριστούμε για την απάντησή σας.</strong><br>
-      Θα σας έχουμε στην καρδιά μας εκείνη τη μέρα.
-    `;
-  }
+  fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify({ name: name, answer: answer }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (answer.includes('Ναι')) {
+      messageEl.innerHTML = `
+        <strong>Σας ευχαριστούμε πολύ!</strong><br>
+        Η παρουσία σας θα μας δώσει μεγάλη χαρά.<br>
+        Ανυπομονούμε να σας δούμε! 💖
+      `;
+    } else {
+      messageEl.innerHTML = `
+        <strong>Σας ευχαριστούμε για την απάντησή σας.</strong><br>
+        Θα σας έχουμε στην καρδιά μας εκείνη τη μέρα.
+      `;
+    }
 
-  // Κρύβει input & κουμπιά μετά την απάντηση
-  document.getElementById('name').style.display = 'none';
-  document.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
-});
-      .catch(error => {
-        messageEl.innerText = 'Υπήρξε πρόβλημα, δοκίμασε ξανά.';
-        console.error(error);
-      });
+    document.getElementById('name').style.display = 'none';
+    document.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
+  })
+  .catch(error => {
+    messageEl.innerText = 'Υπήρξε πρόβλημα, δοκίμασε ξανά.';
+    console.error(error);
+  });
+
     }
   </script>
 </body>
