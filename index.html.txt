@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Προσκλητήριο Γάμου</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: url('https://source.unsplash.com/1600x900/?wedding,flowers') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.6);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.2em;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 2em;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 1em;
+      width: 80%;
+      max-width: 400px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button.yes { background: #ff6b6b; color: #fff; }
+    button.no { background: #555; color: #fff; }
+    button:hover { opacity: 0.8; }
+    .message { margin-top: 2em; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h1>Elvis & Σοφία 💍</h1>
+    <p>Με μεγάλη χαρά σας προσκαλούμε στον γάμο μας! Παρακαλούμε ενημερώστε μας αν θα παρευρεθείτε.</p>
+    
+    <input type="text" id="name" placeholder="Γράψε το όνομά σου" />
+
+    <div>
+      <button class="yes" onclick="sendAnswer('Ναι, θα είμαι εκεί')">💕 Ναι</button>
+      <button class="no" onclick="sendAnswer('Δυστυχώς όχι')">🤍 Όχι</button>
+    </div>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxSEo_04NBg292h_UTA7cvCWxTMQLn4Kcfmxwc55ChLAOsJ05poyADfFRsvAtMkp0nG/exec'; //  link από το Google Apps Script
+
+    function sendAnswer(answer) {
+      const name = document.getElementById('name').value.trim();
+      const messageEl = document.getElementById('message');
+
+      if(name === '') {
+        messageEl.innerText = 'Παρακαλώ γράψε το όνομά σου.';
+        return;
+      }
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ name: name, answer: answer }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(response => response.json())
+      .then(data => {
+  	if (answer.includes('Ναι')) {
+   	 messageEl.innerHTML = `
+       <strong>Σας ευχαριστούμε πολύ!</strong><br>
+      Η παρουσία σας θα μας δώσει μεγάλη χαρά.<br>
+      Ανυπομονούμε να σας δούμε! 💖
+    `;
+ 	 } else {
+   	 messageEl.innerHTML = `
+      	 <strong>Σας ευχαριστούμε για την απάντησή σας.</strong><br>
+      Θα σας έχουμε στην καρδιά μας εκείνη τη μέρα.
+    `;
+  }
+
+  // Κρύβει input & κουμπιά μετά την απάντηση
+  document.getElementById('name').style.display = 'none';
+  document.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
+});
+      .catch(error => {
+        messageEl.innerText = 'Υπήρξε πρόβλημα, δοκίμασε ξανά.';
+        console.error(error);
+      });
+    }
+  </script>
+</body>
+</html>
