@@ -47,6 +47,16 @@
       cursor: pointer;
       transition: 0.3s;
     }
+    select {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 1em;
+      width: 80%;
+      max-width: 400px;
+    }
+
     button.yes { background: #ff6b6b; color: #fff; }
     button.no { background: #555; color: #fff; }
     button:hover { opacity: 0.8; }
@@ -59,7 +69,17 @@
     <p>Με μεγάλη χαρά σας προσκαλούμε στον γάμο μας! Παρακαλούμε ενημερώστε μας αν θα παρευρεθείτε.</p>
     
     <input type="text" id="name" placeholder="Παρακαλώ γράψτε το ονοματεπώνυμο σας." />
+    <select id="guests">
+      <option value="">Πόσα άτομα;</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
 
+
+    
     <div>
       <button class="yes" onclick="sendAnswer('Ναι')">Ναι</button>
       <button class="no" onclick="sendAnswer('Όχι')">Όχι</button>
@@ -69,12 +89,12 @@
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwdj0Y9MniUq94gh-njNrGKStCh08Gy6_5Krd2lsjvES7Tfs4VASe_ndg_IqorNJivm/exec'; //  link από το Google Apps Script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbybtoiDeMffqrGW156TX2lzTclqni_j2ozIzufdX2FCSMPYJ58u6YJa_o7ar-EQNmOk/exec'; //  link από το Google Apps Script
 
   function sendAnswer(answer) {
     // 🔒 Κλείδωμα κουμπιών ΑΜΕΣΑ
     document.querySelectorAll('button').forEach(btn => btn.disabled = true);
-
+    const guests = document.getElementById('guests').value;
     const name = document.getElementById('name').value.trim();
     const messageEl = document.getElementById('message');
 
@@ -85,10 +105,18 @@
       document.querySelectorAll('button').forEach(btn => btn.disabled = false);
       return;
     }
+    if (answer.includes('Ναι') && guests === '') {
+      messageEl.innerText = 'Παρακαλώ επίλεξε πόσα άτομα θα έρθετε.';
+      document.querySelectorAll('button').forEach(btn => btn.disabled = false);
+      return;
+    }
+
 
     const formData = new FormData();
     formData.append('name', name);
     formData.append('answer', answer);
+    formData.append('guests', guests);
+
 
     fetch(scriptURL, {
       method: 'POST',
@@ -112,6 +140,8 @@
 
     document.getElementById('name').style.display = 'none';
     document.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
+    document.getElementById('guests').style.display = 'none';
+
   })
   .catch(error => {
     messageEl.innerText = 'Υπήρξε πρόβλημα, δοκίμασε ξανά.';
@@ -122,6 +152,7 @@
   </script>
 </body>
 </html>
+
 
 
 
